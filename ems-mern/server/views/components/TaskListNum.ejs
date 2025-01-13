@@ -1,0 +1,18 @@
+<div class='flex mt-10 justify-between gap-5 screen'>
+    <div class='rounded-xl w-[45%] py-6 px-9 bg-blue-400'>
+        <h2 id = 'newTaskCount' class='text-3xl font-bold'><%= locals.data.taskCounts.newTask %></h2>
+        <h3 class='text-xl mt-0.5 font-medium'>New Task</h3>
+   </div>
+  <div class='rounded-xl w-[45%] py-6 px-9 bg-green-400'>
+        <h2 id = 'completedCount' class='text-3xl font-bold'><%= locals.data.taskCounts.completed %></h2>
+        <h3 class='text-xl mt-0.5 font-medium'>Completed Task</h3>
+   </div>
+   <div class='rounded-xl w-[45%] py-6 px-9 bg-yellow-400'>
+        <h2 id="activeCount" class='text-3xl text-white font-bold'><%= locals.data.taskCounts.active %></h2>
+        <h3 class='text-xl mt-0.5 text-white font-medium'>Accepted Task</h3>
+    </div>
+    <div class='rounded-xl w-[45%] py-6 px-9 bg-red-400'>
+        <h2 id = 'failedCount' class='text-3xl font-bold'><%= locals.data.taskCounts.failed %></h2>
+        <h3 class='text-xl mt-0.5 font-medium'>Failed Task</h3>
+    </div>
+</div>

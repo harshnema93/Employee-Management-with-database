@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management System</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 flex h-screen w-screen items-center justify-center">
+
+<div class="p-8 rounded-lg shadow-lg bg-gray-800 max-w-md w-full">
+    <h1 class="text-3xl font-semibold text-white mb-6 text-center">
+        Employee Management System
+    </h1>
+    <% if(locals.error) { %>
+        <div class="bg-red-200 text-red-700 text-center py-2">
+            <%= error %>
+        </div>
+    <% } %>
+        <form action="/api/employees/login" method="POST" class="space-y-6">
+            <div>
+                <input
+                    type="email"
+                    name="email"
+                    required
+                    class="w-full p-3 rounded-lg border border-blue-500 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Enter your email"
+                />
+            </div>
+            <div>
+                <input
+                    type="password"
+                    name="password"
+                    required
+                    class="w-full p-3 rounded-lg border border-blue-500 bg-gray-700 text-white placeholder-gray-400 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    placeholder="Enter your password"
+                />
+            </div>
+            <button
+                type="submit"
+                class="w-full py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition duration-300"
+            >
+                Log in
+            </button>
+                <button
+                    type="submit"
+                    formaction="/api/employees/admin/login"
+                    class="w-full py-3 rounded-lg bg-blue-600 text-white font-medium hover:bg-blue-700 transition duration-300 mt-4"
+                    >
+                    Log in as admin
+                 </button>
+
+        </form>
+    </div>
+</body>
+</html>

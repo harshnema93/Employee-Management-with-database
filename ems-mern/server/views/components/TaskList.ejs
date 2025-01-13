@@ -1,0 +1,173 @@
+<div id='tasklist' class='h-[55%] overflow-x-auto flex items-center justify-start gap-5 flex-nowrap w-full py-1 mt-16'>
+    <% if (locals.data && locals.data.tasks) { %>
+         <% data.tasks.filter(task => !task.completed && !task.failed).forEach((ele, idx) => { %>
+            <% if (ele.newTask) { %>
+               <div class='flex-shrink-0 h-full w-[300px] bg-orange-400 rounded-xl'>
+                  <div class='flex justify-between'>
+                    <h3 class='bg-red-600 text-sm px-3 py-1 rounded'><%= ele.category %></h3>
+                    <h4 class='text-sm'><%= ele.taskDate %></h4>
+                   </div>
+                  <h2 class='mt-5 text-2xl font-semibold'><%= ele.taskTitle %></h2>
+                 <p class='text-sm mt-2'><%= ele.taskDescription %></p>
+                    <div class='mt-6'>
+                       <button
+                          onclick="acceptTask(event,'<%= ele.id %>', '<%=data.id%>')"
+                          class='bg-blue-500 rounded font-medium py-1 px-2 text-xs'>
+                          Accept Task
+                        </button>
+                 </div>
+                </div>
+               <% } %>
+             <% if (ele.active) { %>
+               <div class='flex-shrink-0 h-full w-[300px] bg-red-400 rounded-xl'>
+                 <div class='flex justify-between'>
+                      <h3 class='bg-red-600 text-sm px-3 py-1 rounded'><%= ele.category %></h3>
+                     <h4 class='text-sm'><%= ele.taskDate %></h4>
+                 </div>
+                  <h2 class='mt-5 text-2xl font-semibold'><%= ele.taskTitle %></h2>
+                <p class='text-sm mt-2'><%= ele.taskDescription %></p>
+                   <div class='flex justify-between mt-4'>
+                      <button
+                        onclick="completeTask(event,'<%= ele.id %>', '<%=data.id%>')"
+                      class='bg-green-500 py-1 px-2 text-sm'>
+                         Mark as Completed
+                    </button>
+                     <button
+                         onclick="failTask(event,'<%= ele.id %>', '<%=data.id%>')"
+                         class='bg-red-500 py-1 px-2 text-sm'>
+                        Mark as Failed
+                     </button>
+                 </div>
+               </div>
+            <% } %>
+       <% }); %>
+   <% } %>
+    <script>
+       async function acceptTask(event,taskId,employeeId){
+            event.preventDefault();
+            try {
+               const response = await fetch(`/api/employees/accept-task/${taskId}?employeeId=${employeeId}`)
+                if (response.ok){
+                  const data = await response.json();
+                     if(data.data){
+                        let parentElement = event.target.closest('.flex-shrink-0');
+                          if(parentElement){
+                            parentElement.remove()
+                          }
+                         let activeCountElement = document.querySelector('#activeCount');
+                            if(activeCountElement){
+                              activeCountElement.innerText = parseInt(activeCountElement.innerText) + 1
+                            }
+                         let newtaskCountElement = document.querySelector('#newTaskCount');
+                             if(newtaskCountElement){
+                                newtaskCountElement.innerText = parseInt(newtaskCountElement.innerText) - 1
+                              }
+                             let html = "";
+                               for(let i =0;i<data.data.length;i++){
+                                if(data.data[i].id == employeeId){
+                                    html += `  <div key={idx} class="border-2 border-emerald-500 mb-2 py-2 px-4 flex justify-between rounded">
+                                        <h2 class="text-lg font-medium w-1/5 text-white">${data.data[i].firstName}</h2>
+                                        <h3 class="text-lg font-medium w-1/5 text-blue-600">${data.data[i].taskCounts.newTask}</h3>
+                                          <h5 class="text-lg font-medium w-1/5 text-yellow-400">${data.data[i].taskCounts.active}</h5>
+                                          <h5 class="text-lg font-medium w-1/5 text-white">${data.data[i].taskCounts.completed}</h5>
+                                        <h5 class="text-lg font-medium w-1/5 text-red-600">${data.data[i].taskCounts.failed}</h5>
+                                 </div>`;
+                                }
+                             }
+                           if(document.querySelector('.overflow-auto')){
+                             document.querySelector('.overflow-auto').innerHTML = html;
+                             }
+                       }
+                   }else{
+                      console.log(response);
+                   }
+            } catch (error) {
+               console.log(error);
+             }
+        }
+         async function completeTask(event,taskId,employeeId){
+           event.preventDefault();
+            try {
+                 const response = await fetch(`/api/employees/complete-task/${taskId}?employeeId=${employeeId}`)
+                    if (response.ok){
+                        const data = await response.json();
+                          if(data.data){
+                            let parentElement = event.target.closest('.flex-shrink-0');
+                           if(parentElement){
+                                parentElement.remove()
+                           }
+                              let activeCountElement = document.querySelector('#activeCount');
+                              if(activeCountElement){
+                                  activeCountElement.innerText = parseInt(activeCountElement.innerText) - 1
+                             }
+                              let completedCountElement = document.querySelector('#completedCount');
+                              if(completedCountElement){
+                                   completedCountElement.innerText = parseInt(completedCountElement.innerText) + 1
+                              }
+                              let html = "";
+                              for(let i =0;i<data.data.length;i++){
+                                if(data.data[i].id == employeeId){
+                                    html += `  <div key={idx} class="border-2 border-emerald-500 mb-2 py-2 px-4 flex justify-between rounded">
+                                         <h2 class="text-lg font-medium w-1/5 text-white">${data.data[i].firstName}</h2>
+                                          <h3 class="text-lg font-medium w-1/5 text-blue-600">${data.data[i].taskCounts.newTask}</h3>
+                                            <h5 class="text-lg font-medium w-1/5 text-yellow-400">${data.data[i].taskCounts.active}</h5>
+                                            <h5 class="text-lg font-medium w-1/5 text-white">${data.data[i].taskCounts.completed}</h5>
+                                           <h5 class="text-lg font-medium w-1/5 text-red-600">${data.data[i].taskCounts.failed}</h5>
+                                    </div>`;
+                              }
+                             }
+                          if(document.querySelector('.overflow-auto')){
+                              document.querySelector('.overflow-auto').innerHTML = html;
+                           }
+                    }
+                }else{
+                   console.log(response);
+                 }
+             }catch (error) {
+                console.log(error);
+           }
+       }
+      async function failTask(event,taskId,employeeId){
+         event.preventDefault();
+           try {
+                const response = await fetch(`/api/employees/fail-task/${taskId}?employeeId=${employeeId}`)
+                if (response.ok){
+                    const data = await response.json();
+                    if(data.data){
+                         let parentElement = event.target.closest('.flex-shrink-0');
+                          if(parentElement){
+                                parentElement.remove()
+                           }
+                         let activeCountElement = document.querySelector('#activeCount');
+                          if(activeCountElement){
+                                activeCountElement.innerText = parseInt(activeCountElement.innerText) - 1
+                             }
+                          let failedCountElement = document.querySelector('#failedCount');
+                          if(failedCountElement){
+                                failedCountElement.innerText = parseInt(failedCountElement.innerText) + 1
+                             }
+                           let html = "";
+                               for(let i =0;i<data.data.length;i++){
+                                 if(data.data[i].id == employeeId){
+                                     html += `  <div key={idx} class="border-2 border-emerald-500 mb-2 py-2 px-4 flex justify-between rounded">
+                                      <h2 class="text-lg font-medium w-1/5 text-white">${data.data[i].firstName}</h2>
+                                      <h3 class="text-lg font-medium w-1/5 text-blue-600">${data.data[i].taskCounts.newTask}</h3>
+                                        <h5 class="text-lg font-medium w-1/5 text-yellow-400">${data.data[i].taskCounts.active}</h5>
+                                        <h5 class="text-lg font-medium w-1/5 text-white">${data.data[i].taskCounts.completed}</h5>
+                                       <h5 class="text-lg font-medium w-1/5 text-red-600">${data.data[i].taskCounts.failed}</h5>
+                                  </div>`;
+                                  }
+                              }
+                          if(document.querySelector('.overflow-auto')){
+                               document.querySelector('.overflow-auto').innerHTML = html;
+                             }
+                      }
+                }else{
+                    console.log(response);
+                 }
+             } catch (error) {
+                 console.log(error);
+              }
+           }
+ </script>
+</div>

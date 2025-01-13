@@ -1,0 +1,13 @@
+<div class='flex-shrink-0 h-full w-[300px] bg-green-400 rounded-xl'>
+    <div class='flex justify-between'>
+      <h3 class='bg-red-600 text-sm px-3 py-1 rounded'><%= locals.data.category %></h3>
+      <h4 class='text-sm'><%= locals.data.taskDate %></h4>
+    </div>
+    <h2 class='mt-5 text-2xl font-semibold'><%= locals.data.taskTitle %></h2>
+    <p class='text-sm mt-2'>
+    <%= locals.data.taskDescription %>
+    </p>
+    <div class='mt-6'>
+          <button class='w-full bg-red-500 rounded font-medium py-1 px-2 text-xs'>Failed</button>
+      </div>
+  </div>
