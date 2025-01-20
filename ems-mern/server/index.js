@@ -2,6 +2,7 @@ const express = require('express');
         const cors = require('cors');
         const dotenv = require('dotenv');
         const connectDB = require('./config/db');
+        const path = require("path");
         const employeeRoutes = require('./routes/employeeRoutes');
 
 
@@ -15,7 +16,7 @@ const express = require('express');
 
         // Set up ejs
         app.set('view engine', 'ejs');
-        app.set('views', './views');
+        app.set('views', path.join(__dirname, 'views'));
 
 
         app.use(cors());
